@@ -1,5 +1,5 @@
-FROM handcraftedbits/pgmodeler-builder-postgres:latest
-MAINTAINER HandcraftedBits <opensource@handcraftedbits.com>
+ARG BASE_TAG
+FROM $BASE_TAG-dep-pgsql:latest
 
 COPY data /
 
