@@ -6,3 +6,4 @@ docker build ${BUILD_ARGS} --pull -f dep-mxe.Dockerfile -t ${BASE_TAG}-dep-mxe .
 docker build ${BUILD_ARGS} -f dep-libs.Dockerfile -t ${BASE_TAG}-dep-libs .
 docker build ${BUILD_ARGS} -f dep-pgsql.Dockerfile -t ${BASE_TAG}-dep-pgsql .
 docker build ${BUILD_ARGS} -f Dockerfile -t ${BASE_TAG} .
+docker push ${BASE_TAG}
