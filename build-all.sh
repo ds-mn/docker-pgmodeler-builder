@@ -1,5 +1,5 @@
 #!/bin/bash -ex
-BASE_TAG='mumblepins-docker/pgmodeler-builder'
+BASE_TAG='mumblepins/pgmodeler-builder'
 NUM_CPUS=$(grep ^cpu\\scores /proc/cpuinfo | uniq | awk '{print $4}')
 BUILD_ARGS="--build-arg BASE_TAG=${BASE_TAG} --build-arg NUM_CPUS=${NUM_CPUS}"
 docker build ${BUILD_ARGS} --pull -f dep-mxe.Dockerfile -t ${BASE_TAG}-dep-mxe .
