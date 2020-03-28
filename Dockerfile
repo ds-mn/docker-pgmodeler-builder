@@ -1,4 +1,4 @@
-ARG BASE_TAG
+ARG BASE_TAG=mumblepins/pgmodeler-builder
 FROM $BASE_TAG-dep-pgsql:latest
 
 COPY data /

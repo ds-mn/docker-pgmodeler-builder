@@ -1,4 +1,4 @@
-ARG BASE_TAG
+ARG BASE_TAG=mumblepins/pgmodeler-builder
 FROM $BASE_TAG-dep-libs:latest
 
 ARG VERSION_POSTGRESQL=REL_12_0
