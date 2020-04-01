@@ -5,7 +5,7 @@ ARG PG_VERSION=12.2
 ARG BITS=64
 
 RUN set -ex ;\
-    if [ $BITS -eq 64 ]; then BIT_PREFIX="x86-64"; \
+    if [ $BITS -eq 64 ]; then BIT_PREFIX="x86_64"; \
         else BIT_PREFIX="i686" ;\
     fi ;\
     apt-get update ;\
