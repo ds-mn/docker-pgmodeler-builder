@@ -4,11 +4,13 @@ DIR_INSTALL=/opt/pgmodeler
 DIR_POSTGRESQL=/opt/postgresql
 DIR_SRC=/opt/src
 DIR_SRC_PGMODELER=${DIR_SRC}/pgmodeler
-PATH=/opt/mxe/usr/bin:${PATH}
+PATH=/usr/lib/mxe/usr/bin:${PATH}
 TOOLCHAIN=x86_64-w64-mingw32.shared
 
+NUM_CPUS_DEF=$(grep ^cpu\\scores /proc/cpuinfo | uniq | awk '{print $4}')
+NUM_CPUS=${1:-NUM_CPUS_DEF}
 function build() {
-  local dir_mxe=/opt/mxe
+  local dir_mxe=/usr/lib/mxe
   local dir_mxe_toolchain=${dir_mxe}/usr/${TOOLCHAIN}
   local dir_qt=${dir_mxe_toolchain}/qt5
   local dir_plugins=${dir_qt}/plugins
@@ -26,7 +28,7 @@ function build() {
   ${TOOLCHAIN}-qmake-qt5 -r PREFIX=${DIR_INSTALL} PGSQL_INC=${DIR_POSTGRESQL}/include \
     PGSQL_LIB=${DIR_POSTGRESQL}/lib/libpq.dll XML_INC=${dir_mxe_toolchain}/include/libxml2 \
     XML_LIB=${dir_mxe_toolchain}/bin/libxml2-2.dll
-  make
+  make -j${NUM_CPUS}
   make install
   rm ${DIR_INSTALL}/*.a
 
@@ -63,7 +65,8 @@ function build() {
 function clone_source() {
   cd ${DIR_SRC}
 
-  git clone https://github.com/pgmodeler/pgmodeler.git
+  git fetch -a
+  git pull --ff-only || exit 2
 }
 
 function check_version() {
@@ -72,7 +75,7 @@ function check_version() {
   cd ${DIR_SRC_PGMODELER}
 
   git tag >${tags_file}
-  git branch -a |tail -n+2 | awk -F'/' '{print $NF}' >> ${tags_file}
+  #  git branch -a |tail -n+2 | awk -F'/' '{print $NF}' >> ${tags_file}
   sort -o ${tags_file} ${tags_file}
   echo ""
 
@@ -91,6 +94,11 @@ function check_version() {
 
     exit 0
   fi
+  #  git clone https://github.com/pgmodeler/plugins.git
+  #  pushd plugins
+  #  git checkout develop
+  ##  rm -r dummy
+  #  popd
 }
 
 clone_source
