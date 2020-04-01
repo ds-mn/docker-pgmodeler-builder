@@ -1,5 +1,8 @@
 FROM ubuntu:bionic
 
+ARG NUM_CPUS=2
+ARG PG_VERSION=12.2
+
 RUN set -ex ;\
     apt-get update ;\
     apt-get -y dist-upgrade ;\
@@ -11,8 +14,6 @@ RUN set -ex ;\
     for pk in cc zlib dbus fontconfig freetds freetype harfbuzz jpeg \
         libmysqlclient libpng libxml2 openssl pcre2 postgresql \
         sqlite qtbase qtimageformats qtsvg qttools ; do \
-        #mxe-x86-64-w64-mingw32.shared-
-#        pk_list="$pk_list mxe-x86-64-w64-mingw32.static-$pk" ;\
         for pfx in mxe-x86-64-w64-mingw32.static mxe-x86-64-w64-mingw32.shared; do \
             pk_list="$pk_list $pfx-$pk" ;\
         done \
@@ -35,8 +36,6 @@ RUN set -ex ;\
     cd /opt/src ; \
     git clone https://github.com/digitalist/pydeployqt.git
 
-ARG NUM_CPUS=1
-ARG PG_VERSION=12.2
 
 RUN set -ex ;\
     curl --output /tmp/postgres.tar.gz "https://ftp.postgresql.org/pub/source/v${PG_VERSION}/postgresql-${PG_VERSION}.tar.gz" ;\
@@ -52,7 +51,6 @@ RUN set -ex ;\
     rm -rf /opt/src/postgres /tmp/postgres.tar.gz ;\
     git clone https://github.com/pgmodeler/pgmodeler.git /opt/src/pgmodeler
 
-RUN apt-get update && apt-get install -y python3
 
 COPY data /
 
