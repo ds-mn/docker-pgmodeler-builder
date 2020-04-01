@@ -8,7 +8,7 @@ PATH=/usr/lib/mxe/usr/bin:${PATH}
 TOOLCHAIN=x86_64-w64-mingw32.shared
 
 NUM_CPUS_DEF=$(grep ^cpu\\scores /proc/cpuinfo | uniq | awk '{print $4}')
-NUM_CPUS=${1:-NUM_CPUS_DEF}
+NUM_CPUS=${2:-NUM_CPUS_DEF}
 function build() {
   local dir_mxe=/usr/lib/mxe
   local dir_mxe_toolchain=${dir_mxe}/usr/${TOOLCHAIN}
@@ -63,7 +63,7 @@ function build() {
 }
 
 function clone_source() {
-  cd ${DIR_SRC}
+  cd ${DIR_SRC_PGMODELER}
 
   git fetch -a
   git pull --ff-only || exit 2

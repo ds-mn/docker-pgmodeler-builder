@@ -34,10 +34,8 @@ RUN set -ex ;\
     rm -rf /var/lib/apt/lists/* ;\
     mkdir -p /opt/src ;\
     cd /opt/src ; \
-    git clone https://github.com/digitalist/pydeployqt.git
-
-
-RUN set -ex ;\
+    git clone https://github.com/digitalist/pydeployqt.git /opt/src/pydeployqt ;\
+    git clone https://github.com/pgmodeler/pgmodeler.git /opt/src/pgmodeler ;\
     curl --output /tmp/postgres.tar.gz "https://ftp.postgresql.org/pub/source/v${PG_VERSION}/postgresql-${PG_VERSION}.tar.gz" ;\
     mkdir -p /opt/src/postgres ;\
     tar --strip-components=1 -C /opt/src/postgres -xvf /tmp/postgres.tar.gz ;\
@@ -48,8 +46,7 @@ RUN set -ex ;\
     make -j $NUM_CPUS ;\
     make install ;\
     cd /opt/src ;\
-    rm -rf /opt/src/postgres /tmp/postgres.tar.gz ;\
-    git clone https://github.com/pgmodeler/pgmodeler.git /opt/src/pgmodeler
+    rm -rf /opt/src/postgres /tmp/postgres.tar.gz
 
 
 COPY data /
