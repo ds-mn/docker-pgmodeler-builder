@@ -5,7 +5,15 @@ DIR_POSTGRESQL=/opt/postgresql
 DIR_SRC=/opt/src
 DIR_SRC_PGMODELER=${DIR_SRC}/pgmodeler
 PATH=/usr/lib/mxe/usr/bin:${PATH}
-TOOLCHAIN=x86_64-w64-mingw32.shared
+
+TC_PREFIX=$(ls /usr/lib/mxe/usr/bin | grep shared-gcov | head -c4)
+if [ ${TC_PREFIX} == "i686" ]; then
+  TOOLCHAIN=i686-w64-mingw32.shared
+  LIB_SUFFIX=""
+else
+  TOOLCHAIN=x86_64-w64-mingw32.shared
+  LIB_SUFFIX="-x64"
+fi
 
 NUM_CPUS_DEF=$(grep ^cpu\\scores /proc/cpuinfo | uniq | awk '{print $4}')
 NUM_CPUS=${2:-NUM_CPUS_DEF}
@@ -43,9 +51,9 @@ function build() {
   cp ${dir_qt}/bin/Qt5Network.dll ${DIR_INSTALL}
   cp ${dir_qt}/bin/Qt5PrintSupport.dll ${DIR_INSTALL}
   cp ${dir_qt}/bin/Qt5Svg.dll ${DIR_INSTALL}
-  cp ${dir_mxe_toolchain}/bin/libcrypto-1_1-x64.dll ${DIR_INSTALL}
+  cp ${dir_mxe_toolchain}/bin/libcrypto-1_1${LIB_SUFFIX}.dll ${DIR_INSTALL}
   cp ${dir_mxe_toolchain}/bin/liblzma-5.dll ${DIR_INSTALL}
-  cp ${dir_mxe_toolchain}/bin/libssl-1_1-x64.dll ${DIR_INSTALL}
+  cp ${dir_mxe_toolchain}/bin/libssl-1_1${LIB_SUFFIX}.dll ${DIR_INSTALL}
   cp ${dir_mxe_toolchain}/bin/libxml2-2.dll ${DIR_INSTALL}
   cp ${DIR_POSTGRESQL}/lib/libpq.dll ${DIR_INSTALL}
 
