@@ -1,7 +1,7 @@
 FROM ubuntu:bionic
 
 ARG NUM_CPUS=2
-ARG PG_VERSION=12.2
+ARG PG_VERSION=12.4
 ARG BITS=64
 
 RUN set -ex ;\
