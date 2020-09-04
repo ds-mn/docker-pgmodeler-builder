@@ -1,4 +1,5 @@
-# pgModeler Builder [![Docker Pulls](https://img.shields.io/docker/pulls/handcraftedbits/pgmodeler-builder.svg?maxAge=2592000)](https://hub.docker.com/r/handcraftedbits/pgmodeler-builder)
+# pgModeler Builder
+![Docker Pulls](https://img.shields.io/docker/pulls/mumblepins/pgmodeler-builder?style=flat-square) ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/mumblepins/pgmodeler-builder?style=flat-square) ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/mumblepins/pgmodeler-builder/latest?style=flat-square)
 
 A [Docker](https://www.docker.com) container that allows you to build [pgModeler](https://pgmodeler.io/) with one
 simple command.
