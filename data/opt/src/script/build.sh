@@ -16,7 +16,7 @@ else
 fi
 
 NUM_CPUS_DEF=$(grep ^cpu\\scores /proc/cpuinfo | uniq | awk '{print $4}')
-NUM_CPUS=${2:-NUM_CPUS_DEF}
+NUM_CPUS=${2:-$NUM_CPUS_DEF}
 function build() {
   local dir_mxe=/usr/lib/mxe
   local dir_mxe_toolchain=${dir_mxe}/usr/${TOOLCHAIN}
@@ -27,15 +27,18 @@ function build() {
 
   cd ${DIR_SRC_PGMODELER}
 
+  git clone https://github.com/pgmodeler/plugins
   # Replace some bits that are only relevant when building ON Windows.
 
-  sed -i pgmodeler.pri -e 's/^.*wingetdate.*$/ BUILDNUM=$$system("date \x27+%Y%m%d\x27")/' pgmodeler.pri
-
+#  sed -i pgmodeler.pri -e 's/^.*wingetdate.*$/ BUILDNUM=$$system("date \x27+%Y%m%d\x27")/' pgmodeler.pri
+  sed -i -e 's/^\s*BUILDDATE=.*$/ BUILDDATE=$$system("date \x27+%Y%m%d\x27")/' pgmodeler.pri
+  sed -i -e 's/^\s*BUILDNUM=.*$/ BUILDNUM=$$system("$$PWD\/getbuildnum.sh || date \x27+%Y%m%d\x27")/' pgmodeler.pri
+  sed -i -E 's|^(\s*windows: DESTDIR.*)$|#\1|' plugins/graphicalquerybuilder/graphicalquerybuilder.pro
   # Build pgModeler.
 
   ${TOOLCHAIN}-qmake-qt5 -r PREFIX=${DIR_INSTALL} PGSQL_INC=${DIR_POSTGRESQL}/include \
     PGSQL_LIB=${DIR_POSTGRESQL}/lib/libpq.dll XML_INC=${dir_mxe_toolchain}/include/libxml2 \
-    XML_LIB=${dir_mxe_toolchain}/bin/libxml2-2.dll
+    XML_LIB=${dir_mxe_toolchain}/bin/libxml2-2.dll CONFIG+=release
   make -j${NUM_CPUS}
   make install
   rm ${DIR_INSTALL}/*.a
@@ -83,8 +86,8 @@ function check_version() {
   cd ${DIR_SRC_PGMODELER}
 
   git tag >${tags_file}
-  #  git branch -a |tail -n+2 | awk -F'/' '{print $NF}' >> ${tags_file}
-  sort -o ${tags_file} ${tags_file}
+  git branch -a |tail -n+2 | awk -F'/' '{print $NF}' >> ${tags_file}
+  sort -u -o ${tags_file} ${tags_file}
   echo ""
 
   if [ -z "${1}" ]; then
@@ -95,7 +98,7 @@ function check_version() {
   fi
 
   if [[ "${1}" =~ $(echo ^\($(paste -sd'|' ${tags_file})\)$) ]]; then
-    git checkout -b ${1} ${1}
+    git checkout -b ${1} ${1} || git checkout ${1}
   else
     echo -e "Invalid pgModeler version '${1}'.  Valid versions:\n"
     cat ${tags_file}
